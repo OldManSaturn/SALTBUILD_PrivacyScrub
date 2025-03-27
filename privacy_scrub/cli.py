@@ -1,5 +1,6 @@
 import click
 from PIL import Image
+import hashlib
 import os
 
 VERSION = "0.1.0"
@@ -32,15 +33,23 @@ def greet(name):
     click.secho(f"Hello, {name}!", fg="green")
 
 @main.command(
-    help="Load and validate an image file.\n\nExample: load ./path/to/image.jpg"
+    help="Load, validate, and hash an image file.\n\nExample: load ./path/to/image.jpg"
 )
 @click.argument("filepath", type=click.Path(exists=True, readable=True))
 def load(filepath):
-    """📷 Load an image file from disk"""
+    """📷 Load an image file from disk and print its SHA-256 hash"""
     try:
         with Image.open(filepath) as img:
-            img.verify()
+            img.verify()  # Check image is valid
+
+        # Compute hash
+        with open(filepath, "rb") as f:
+            data = f.read()
+            sha256 = hashlib.sha256(data).hexdigest()
+
         click.secho(f"Loaded image: {os.path.basename(filepath)}", fg="green")
+        click.secho(f"SHA-256: {sha256}", fg="cyan")
+
     except Exception as e:
         click.secho(f"Failed to load image: {e}", fg="red", bold=True)
 
@@ -59,7 +68,7 @@ def repl():
                 click.echo(
                     "\nAvailable commands:\n"
                     "  greet NAME   - Greet someone by name\n"
-                    "  load PATH    - Load an image file\n"
+                    "  load PATH    - Load and hash an image file\n"
                     "  exit         - Exit interactive mode\n"
                 )
             elif user_input.startswith("greet "):
