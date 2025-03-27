@@ -6,21 +6,13 @@ import os
 VERSION = "0.1.0"
 
 def print_welcome():
-    click.secho("Welcome to your_project interactive mode", fg="cyan", bold=True)
+    click.secho("Welcome to privacy_scrub interactive mode", fg="cyan", bold=True)
     click.echo("Type 'help' for available commands. Type 'exit' to quit.\n")
 
 @click.group(invoke_without_command=True)
 @click.version_option(VERSION)
 @click.pass_context
 def main(ctx):
-    """
-    🚀 your_project CLI
-
-    Available Commands:
-      greet  👋 Print a greeting
-      load   📷 Load and validate an image file
-      repl   🧪 Start an interactive shell
-    """
     if ctx.invoked_subcommand is None:
         click.echo(ctx.get_help())
 
@@ -29,7 +21,6 @@ def main(ctx):
 )
 @click.argument("name")
 def greet(name):
-    """👋 Print a greeting"""
     click.secho(f"Hello, {name}!", fg="green")
 
 @main.command(
@@ -37,7 +28,6 @@ def greet(name):
 )
 @click.argument("filepath", type=click.Path(exists=True, readable=True))
 def load(filepath):
-    """📷 Load an image file from disk and print its SHA-256 hash"""
     try:
         with Image.open(filepath) as img:
             img.verify()  # Check image is valid
@@ -57,11 +47,10 @@ def load(filepath):
     help="Start an interactive shell for entering commands."
 )
 def repl():
-    """🧪 Start an interactive shell"""
     print_welcome()
     while True:
         try:
-            user_input = input("your-project > ").strip()
+            user_input = input("privacy_scrub > ").strip()
             if user_input in ("exit", "quit"):
                 break
             elif user_input in ("help", "?"):
