@@ -1,0 +1,9 @@
+[project]
+name = "SALTBUILD_PrivacyScrub"
+version = "0.1.0"
+description = ""
+requires-python = ">=3.13"
+dependencies = ["click"]
+
+[project.scripts]
+privacy_scrub = "privacy_scrub.cli:main"
